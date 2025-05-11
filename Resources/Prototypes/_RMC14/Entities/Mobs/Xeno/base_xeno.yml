@@ -361,6 +361,7 @@
   - type: RMCObstacleSlamCauserImmune
   - type: RMCMobCollisionMass
   - type: XenoRankNames
+  - type: SpriteMovement
 
 - type: entity
   abstract: true

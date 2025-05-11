@@ -8,6 +8,7 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Systems;
 using Content.Shared.StatusEffect;
 using Content.Shared.Stunnable;
@@ -62,9 +63,9 @@ public sealed class XenoVisualizerSystem : VisualizerSystem<XenoComponent>
         UpdateDrawDepth((uid, sprite));
     }
 
-    public void UpdateSprite(Entity<SpriteComponent?, MobStateComponent?, AppearanceComponent?, InputMoverComponent?, ThrownItemComponent?, XenoLeapingComponent?, KnockedDownComponent?> entity)
+    public void UpdateSprite(Entity<SpriteComponent?, MobStateComponent?, AppearanceComponent?, SpriteMovementComponent?, ThrownItemComponent?, XenoLeapingComponent?, KnockedDownComponent?> entity)
     {
-        var (_, sprite, mobState, appearance, input, thrown, leaping, knocked) = entity;
+        var (_, sprite, mobState, appearance, movement, thrown, leaping, knocked) = entity;
         if (!Resolve(entity, ref sprite, ref appearance, false))
             return;
 
@@ -72,7 +73,7 @@ public sealed class XenoVisualizerSystem : VisualizerSystem<XenoComponent>
         if (Resolve(entity, ref mobState, false))
             state = mobState.CurrentState;
 
-        Resolve(entity, ref input, ref thrown, ref leaping, ref knocked, false);
+        Resolve(entity, ref movement, ref thrown, ref leaping, ref knocked, false);
         if (knocked != null && state != MobState.Dead)
             state = MobState.Critical;
 
@@ -147,8 +148,8 @@ public sealed class XenoVisualizerSystem : VisualizerSystem<XenoComponent>
                     break;
                 }
 
-                if (input?.HeldMoveButtons > MoveButtons.None &&
-                    input.HeldMoveButtons != MoveButtons.Walk &&
+                if (movement != null &&
+                    movement.IsMoving &&
                     rsi.TryGetState("running", out _))
                 {
                     sprite.LayerSetState(layer, "running");
