@@ -1,0 +1,132 @@
+- type: entity
+  parent:
+  - CMXenoDeveloped
+  - CMXenoTail
+  - CMXenoFlammable
+  - RMCXenoSpeechSounds
+  - RMCXenoCommendationReceiver
+  - RMCXenoMobCollision
+  id: RMCXenoBehemoth
+  name: Behemoth
+  description: The one that kills you (WIP)
+  components:
+#  - type: GuideHelp TODO Guide
+#    guides:
+#    - RMCGuideRoleRavager
+#  - type: GhostRole TODO role
+#    name: cm-job-name-xeno-ravager
+  - type: Sprite
+    sprite: _RMC14/Mobs/Xenonids/Ravager/ravager.rsi
+  - type: MobState
+    allowedStates:
+    - Alive
+    - Critical
+    - Dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      1000: Critical
+      1100: Dead
+  - type: Xeno
+    role: CMXenoRavager
+    actionIds:
+    - ActionXenoRest
+    - ActionXenoRegurgitate
+    - ActionXenoWatch
+    - ActionXenoTailStab
+    - ActionXenoEmpower
+    - ActionXenoStomp
+    - ActionXenoDevolve
+    tier: 0
+    hudOffset: 0,0.1
+  - type: XenoHeavy
+  - type: XenoDevour
+  - type: XenoPlasma
+    plasma: 500
+    maxPlasma: 500
+    plasmaRegenOnWeeds: 2
+  - type: CMArmor
+    xenoArmor: 50
+    explosionArmor: 100
+  - type: XenoClaws
+    clawType: VerySharp
+  - type: MeleeWeapon
+    attackRate: 1
+    damage:
+      groups:
+        Brute: 45
+  - type: XenoTailStab
+    tailDamage:
+      groups:
+        Brute: 54
+  - type: Tackle
+    max: 5
+    chance: 0.35
+    stunMin: 4
+    stunMax: 5
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 185
+        mask:
+        - MobMask
+        - BarbedBarricade
+        layer:
+        - MobLayer
+      fix2:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.50
+        density: 185
+        layer:
+        - BulletImpassable
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2
+    baseSprintSpeed: 3.5
+  - type: SlowOnPull
+    slowdowns:
+    - multiplier: 0.6125
+      whitelist:
+        components:
+        - Marine
+    - multiplier: 0.6675
+      whitelist:
+        components:
+        - XenoLight
+    - multiplier: 0.445
+      whitelist:
+        components:
+        - XenoHeavy
+  - type: RMCSize
+    size: Immobile
+  - type: RMCXenoDamageVisuals
+    prefix: ravager
+  - type: TacticalMapIcon
+    icon:
+      sprite: _RMC14/Interface/map_blips.rsi
+      state: ravager
+  - type: FixedIdentity
+    name: cm-job-name-xeno-ravager
+  - type: XenoHidden
+  - type: XenoStomp
+    damage:
+      types:
+        Blunt: 65
+    selfEffect: CMEffectSelfStomp
+  - type: XenoBrutalize
+    damage:
+      types:
+        Blunt: 10
+    range: 3
+  - type: XenoEmpower
+    MaxTargets: 10
+    SuperThreshold: 11
+    damageIncreasePer:
+      groups:
+        Brute: 2
+    damageTailIncreasePer:
+      groups:
+        Brute: 2.4
