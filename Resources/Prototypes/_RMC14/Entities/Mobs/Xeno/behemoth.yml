@@ -17,6 +17,29 @@
 #    name: cm-job-name-xeno-ravager
   - type: Sprite
     sprite: _RMC14/Mobs/Xenonids/Ravager/ravager.rsi
+    scale: 1.5, 1.5
+    layers:
+    - map: [ "enum.XenoVisualLayers.Base" ]
+      state: alive
+      color: "#FF0000"
+    - map: [ "enum.RMCDamageVisualLayers.Base" ]
+      visible: false
+    - map: [ "enum.XenoInhandVisualLayers.Left" ]
+      visible: false
+    - map: [ "enum.XenoInhandVisualLayers.Right" ]
+      visible: false
+    - map: [ "focused" ]
+      sprite: _RMC14/Interface/xeno_hud.rsi
+      state: hudeye
+      visible: false
+    - map: [ "targetedDirection" ]
+      sprite: _RMC14/Effects/targeted.rsi
+      state: sniper_lockon_direction
+      visible: false
+    - map: [ "targetedDirectionIntense" ]
+      sprite: _RMC14/Effects/targeted.rsi
+      state: sniper_lockon_intense_direction
+      visible: false
   - type: MobState
     allowedStates:
     - Alive
@@ -25,8 +48,8 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      1000: Critical
-      1100: Dead
+      800: Critical
+      900: Dead
   - type: Xeno
     role: CMXenoRavager
     actionIds:
@@ -35,7 +58,10 @@
     - ActionXenoWatch
     - ActionXenoTailStab
     - ActionXenoEmpower
-    - ActionXenoStomp
+    - ActionXenoFortifySteelcrest
+    - ActionXenoFling
+    - ActionXenoTailSweep
+    - ActionXenoLeap
     - ActionXenoDevolve
     tier: 0
     hudOffset: 0,0.1
@@ -111,22 +137,18 @@
   - type: FixedIdentity
     name: cm-job-name-xeno-ravager
   - type: XenoHidden
-  - type: XenoStomp
-    damage:
-      types:
-        Blunt: 65
     selfEffect: CMEffectSelfStomp
-  - type: XenoBrutalize
-    damage:
-      types:
-        Blunt: 10
-    range: 3
   - type: XenoEmpower
     MaxTargets: 10
     SuperThreshold: 11
-    damageIncreasePer:
-      groups:
-        Brute: 2
-    damageTailIncreasePer:
-      groups:
-        Brute: 2.4
+  - type: XenoFortify
+    changeExplosionWeakness: false
+    canMoveFortified: true
+  - type: XenoFling
+  - type: XenoTailSweep
+    range: 3
+    damage:
+      types:
+        Slash: 30
+  - type: XenoLeap
+    
