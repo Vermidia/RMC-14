@@ -1,5 +1,6 @@
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Generic;
 
 namespace Content.Shared._RMC14.Ghost;
 
@@ -18,7 +19,7 @@ public sealed partial class RMCGhostRoleVotingComponent : Component
     [DataField, AutoNetworkedField]
     public bool VotingDone = false;
 
-    [DataField]
+    [DataField(customTypeSerializer: typeof(DictionarySerializer<NetEntity, int>)), AutoNetworkedField]
     public Dictionary<NetEntity, int> Candidates = new();
 
     [DataField, AutoNetworkedField]

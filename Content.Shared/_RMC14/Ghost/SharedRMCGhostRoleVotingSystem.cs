@@ -20,6 +20,7 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly MobStateSystem _mob = default!;
+    [Dependency] private readonly SharedMindSystem _mind = default!;
 
     public override void Initialize()
     {
@@ -36,6 +37,9 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
 
     private void OnXenoVotePickerBegin(Entity<RMCGhostRoleVotePickerXenoComponent> ent, ref ComponentStartup args)
     {
+        if (_net.IsClient)
+            return;
+
         if (!TryComp<RMCGhostRoleVotingComponent>(ent, out var voting))
             return;
 
@@ -49,7 +53,8 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
             if (!_mob.IsAlive(uid))
                 continue;
 
-            //TODO RMC14 mind check one day
+            if (!_mind.TryGetMind(uid, out var _, out var _))
+                continue;
 
             voters.Add(uid);
 
@@ -101,8 +106,7 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
 
         foreach (var votie in candidates)
         {
-            if (!GetNetEntity(votie).IsClientSide())
-                ent.Comp.Candidates.Add(GetNetEntity(votie), 0);
+            ent.Comp.Candidates.Add(GetNetEntity(votie), 0);
         }
 
         ent.Comp.VoteEndsAt = _timing.CurTime + ent.Comp.VotingTime;
@@ -127,7 +131,8 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
         if (!ent.Comp.Candidates.ContainsKey(args.Selection))
             return;
 
-        ent.Comp.Candidates[args.Selection]++;
+        if (_net.IsServer)
+            ent.Comp.Candidates[args.Selection]++;
 
         RemoveVoteAction(args.Actor, ent);
     }

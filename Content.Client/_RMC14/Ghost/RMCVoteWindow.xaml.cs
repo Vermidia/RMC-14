@@ -37,7 +37,7 @@ public sealed partial class RMCVoteWindow : DefaultWindow
         // Round up a second.
         timeLeft = TimeSpan.FromSeconds(Math.Ceiling(timeLeft.TotalSeconds));
 
-        VotingLabel.Text = Loc.GetString(_voting.VoteMenuText, ("time", $"{timeLeft:ss}"));
+        VotingLabel.Text = Loc.GetString(_voting.VoteMenuText, ("time", $"{(int)timeLeft.TotalSeconds}"));
     }
 }
 

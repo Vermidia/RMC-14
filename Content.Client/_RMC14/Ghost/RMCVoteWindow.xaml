@@ -4,7 +4,7 @@
     Title="{Loc rmc-vote-window}"
     MinSize="300 400">
     <BoxContainer Orientation="Vertical">
-        <Label Name="VotingLabel" Access="Public" Text="Choose who will become the thing!" />
+        <RichTextLabel Name="VotingLabel" Access="Public" MaxWidth="300" HorizontalAlignment="Left" Text=""  />
         <ScrollContainer HScrollEnabled="False" HorizontalExpand="True" VerticalExpand="True">
             <BoxContainer Orientation="Vertical" Name="EntContainer" Access="Public" />
         </ScrollContainer>

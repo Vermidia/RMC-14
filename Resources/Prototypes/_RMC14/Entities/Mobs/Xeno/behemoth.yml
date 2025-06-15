@@ -95,7 +95,7 @@
       fix1:
         shape:
           !type:PhysShapeCircle
-          radius: 0.35
+          radius: 0.85
         density: 185
         mask:
         - MobMask
@@ -105,7 +105,7 @@
       fix2:
         shape:
           !type:PhysShapeCircle
-          radius: 0.50
+          radius: 1.2
         density: 185
         layer:
         - BulletImpassable
@@ -153,6 +153,5 @@
   - type: XenoToggleCharging
     maxStage: 32
     speedPerStage: 0.05
-    stepIncrement: 4
     plasmaPerStep: 1
     
