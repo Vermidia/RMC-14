@@ -1,0 +1,39 @@
+- type: entity
+  parent: MarkerBase
+  id: RMCVoteEventSpawner
+  name: Vote Event Spawner
+  suffix: RMC
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _RMC14/Markers/landmarks.rsi
+    layers:
+    - state: corpse_spawner
+  - type: RMCGhostRoleVoting
+  - type: GhostRoleMobSpawner
+    availibleTakeovers: 0
+  - type: UserInterface
+    interfaces:
+      enum.RMCVoteUIKey.Key:
+        type: RMCGhostVoteBui
+
+- type: entity
+  parent: RMCVoteEventSpawner
+  id: RMCBehemothVoteEventSpawner
+  name: Behemoth Vote Spawner
+  components:
+  - type: RMCGhostRoleVotePickerXeno
+  - type: RMCGhostRoleVoting
+    voteAction: ActionVoteBehemoth
+    votePopup: rmc-ghost-vote-popup-behemoth
+  - type: GhostRoleMobSpawner
+    prototype: RMCXenoBehemoth
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cm-xeno-name
+    description: cm-xeno-description
+    raffle:
+      settings: short
+    

@@ -61,7 +61,7 @@
     - ActionXenoFortifySteelcrest
     - ActionXenoFling
     - ActionXenoTailSweep
-    - ActionXenoLeap
+    - ActionXenoToggleCharging
     - ActionXenoDevolve
     tier: 0
     hudOffset: 0,0.1
@@ -150,5 +150,9 @@
     damage:
       types:
         Slash: 30
-  - type: XenoLeap
+  - type: XenoToggleCharging
+    maxStage: 32
+    speedPerStage: 0.05
+    stepIncrement: 4
+    plasmaPerStep: 1
     
