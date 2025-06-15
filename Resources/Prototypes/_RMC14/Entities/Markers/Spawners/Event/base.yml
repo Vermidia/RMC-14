@@ -16,6 +16,7 @@
     interfaces:
       enum.RMCVoteUIKey.Key:
         type: RMCGhostVoteBui
+        interactionRange: -1
 
 - type: entity
   parent: RMCVoteEventSpawner
@@ -26,6 +27,7 @@
   - type: RMCGhostRoleVoting
     voteAction: ActionVoteBehemoth
     votePopup: rmc-ghost-vote-popup-behemoth
+    voteMenuText: rmc-ghost-vote-countdown-behemoth
   - type: GhostRoleMobSpawner
     prototype: RMCXenoBehemoth
   - type: GhostRole

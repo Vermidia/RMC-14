@@ -1,15 +1,14 @@
-using Content.Shared._RMC14.Mind;
 using Content.Shared._RMC14.Xenonids;
 using Content.Shared._RMC14.Xenonids.Egg;
 using Content.Shared.Actions;
 using Content.Shared.Mind;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Network;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
-using System;
-using System.Security.Cryptography;
-using YamlDotNet.Serialization;
 
 namespace Content.Shared._RMC14.Ghost;
 
@@ -20,7 +19,7 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
-    [Dependency] private readonly SharedMindSystem _mind = default!;
+    [Dependency] private readonly MobStateSystem _mob = default!;
 
     public override void Initialize()
     {
@@ -43,12 +42,14 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
         List<EntityUid> candidates = new();
         List<EntityUid> voters = new();
 
-        var query = EntityQueryEnumerator<XenoComponent>();
+        var query = EntityQueryEnumerator<XenoComponent, MobStateComponent>();
 
-        while (query.MoveNext(out var uid, out var xeno))
+        while (query.MoveNext(out var uid, out var xeno, out var mob))
         {
-            if (!_mind.TryGetMind(uid, out var _, out var _))
+            if (!_mob.IsAlive(uid))
                 continue;
+
+            //TODO RMC14 mind check one day
 
             voters.Add(uid);
 
@@ -61,15 +62,24 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
             candidates.Add(uid);
         }
 
+        candidates.Sort((a, b) => string.CompareOrdinal(Name(a, MetaData(a)), Name(b, MetaData(b))));
+
         StartVote((ent, voting), candidates, voters);
     }
 
+    /// <summary>
+    /// Gives all voters a ghostRoleVoter comp, and an action to vote.
+    /// Currently must be run server and clientside because lists aren't synced
+    /// Lists convert ents into EntityUids for consistency between server and client
+    /// </summary>
+    /// <param name="ent">vote holder entity</param>
+    /// <param name="candidates">who can be voted for</param>
+    /// <param name="voters">who can vote</param>
     public void StartVote(Entity<RMCGhostRoleVotingComponent> ent, List<EntityUid> candidates, List<EntityUid> voters)
     {
         foreach (var voter in voters)
         {
             EnsureComp<GhostRoleVoterComponent>(voter);
-            EnsureComp<IgnoreUIRangeComponent>(voter);
 
             var action = _actions.AddAction(voter, ent.Comp.VoteAction);
 
@@ -91,7 +101,8 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
 
         foreach (var votie in candidates)
         {
-            ent.Comp.Candidates.Add(votie, 0);
+            if (!GetNetEntity(votie).IsClientSide())
+                ent.Comp.Candidates.Add(GetNetEntity(votie), 0);
         }
 
         ent.Comp.VoteEndsAt = _timing.CurTime + ent.Comp.VotingTime;
@@ -101,7 +112,9 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
     private void OnOpenVoteAction(Entity<GhostRoleVoterComponent> ent, ref RMCGhostVoteActionEvent args)
     {
         if (args.Source != null)
+        {
             _ui.OpenUi(args.Source.Value, RMCVoteUIKey.Key, ent);
+        }
     }
 
     /// <summary>
@@ -111,13 +124,10 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
     /// <param name="args"></param>
     private void OnVoteReceived(Entity<RMCGhostRoleVotingComponent> ent, ref RMCVoteWindowBuiMsg args)
     {
-        if (!TryGetEntity(args.Selection, out var selection))
+        if (!ent.Comp.Candidates.ContainsKey(args.Selection))
             return;
 
-        if (!ent.Comp.Candidates.ContainsKey(selection.Value))
-            return;
-
-        ent.Comp.Candidates[selection.Value]++;
+        ent.Comp.Candidates[args.Selection]++;
 
         RemoveVoteAction(args.Actor, ent);
     }
@@ -133,7 +143,7 @@ public abstract class SharedRMCGhostRoleVotingSystem : EntitySystem
 
         while (query.MoveNext(out var uid, out var voting))
         {
-            if (!voting.VotingDone && time < voting.VoteEndsAt)
+            if (voting.VotingDone || time < voting.VoteEndsAt)
                 continue;
 
             //Remove the corresponding action if it wasn't gotten rid of already

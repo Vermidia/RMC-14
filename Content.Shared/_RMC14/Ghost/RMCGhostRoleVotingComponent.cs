@@ -12,11 +12,14 @@ public sealed partial class RMCGhostRoleVotingComponent : Component
     [DataField]
     public LocId VotePopup = "rmc-ghost-vote-popup-generic";
 
+    [DataField]
+    public LocId VoteMenuText = "rmc-ghost-vote-countdown-generic";
+
     [DataField, AutoNetworkedField]
     public bool VotingDone = false;
 
     [DataField]
-    public Dictionary<EntityUid, int> Candidates = new();
+    public Dictionary<NetEntity, int> Candidates = new();
 
     [DataField, AutoNetworkedField]
     public TimeSpan VotingTime = TimeSpan.FromSeconds(20);

@@ -2,6 +2,7 @@ using Content.Shared._RMC14.Ghost;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 using System.Linq;
 using static Robust.Client.UserInterface.Controls.LineEdit;
 
@@ -15,32 +16,34 @@ public sealed class RMCGhostVoteBui : BoundUserInterface
     [ViewVariables]
     private RMCVoteWindow? _window;
 
-    private readonly List<EntityUid> _candidates;
+    private readonly List<NetEntity> _candidates = new();
+
+    private readonly RMCGhostRoleVotingComponent? _voting = null;
 
     public RMCGhostVoteBui(EntityUid owner, Enum uiKey) : base(owner, uiKey)
     {
-        _candidates = EntMan.GetComponent<RMCGhostRoleVotingComponent>(Owner).Candidates.Keys.ToList();
+        _candidates.Clear();
+        _voting = EntMan.GetComponent<RMCGhostRoleVotingComponent>(Owner);
+        _candidates = _voting.Candidates.Keys.ToList();
+
     }
 
     protected override void Open()
     {
         base.Open();
-        EnsureWindow();
+        Populate();
     }
 
-    protected override void UpdateState(BoundUserInterfaceState state)
+    private void Populate()
     {
-
         _window = EnsureWindow();
-        _window.VotingLabel.Text = $"Something vote text + timer";
         _window.EntContainer.DisposeAllChildren();
 
         foreach (var votie in _candidates)
         {
             var control = new RMCVoteChoiceControl();
-            control.Set(EntMan.GetComponent<MetaDataComponent>(votie).EntityName);
-            var net = EntMan.GetNetEntity(votie);
-            control.Button.OnPressed += _ => SendPredictedMessage(new RMCVoteWindowBuiMsg(net));
+            control.Set(EntMan.GetComponent<MetaDataComponent>(EntMan.GetEntity(votie)).EntityName);
+            control.Button.OnPressed += _ => SendPredictedMessage(new RMCVoteWindowBuiMsg(votie));
 
             _window.EntContainer.AddChild(control);
         }
@@ -53,6 +56,8 @@ public sealed class RMCGhostVoteBui : BoundUserInterface
 
         _window = this.CreateWindow<RMCVoteWindow>();
         _window.SearchBar.OnTextChanged += OnSearchBarChanged;
+        if (_voting != null)
+            _window.SetTimer(_voting);
         return _window;
     }
 
