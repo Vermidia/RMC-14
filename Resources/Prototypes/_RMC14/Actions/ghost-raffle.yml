@@ -1,0 +1,18 @@
+- type: entity
+  id: RMCActionOptIn
+  name: Opt in 
+  description: Opt in to becoming some kinda ghost role.
+  components:
+  - type: InstantAction
+    checkCanInteract: false
+    icon:
+      sprite: _RMC14/Actions/extra_actions.rsi
+      state: vote
+    event: !type:RMCGhostRoleOptInActionEvent
+
+- type: entity
+  parent: RMCActionOptIn
+  id: ActionOptInBehemoth
+  name: Join Behemoth Raffle
+  description: Join the behemoth raffle.
+

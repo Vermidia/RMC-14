@@ -14,7 +14,7 @@
 #    guides:
 #    - RMCGuideRoleRavager
 #  - type: GhostRole TODO role
-#    name: cm-job-name-xeno-ravager
+#    name: cm-job-name-xeno-behemoth
   - type: Sprite
     sprite: _RMC14/Mobs/Xenonids/Ravager/ravager.rsi
     scale: 1.5, 1.5
@@ -51,7 +51,7 @@
       800: Critical
       900: Dead
   - type: Xeno
-    role: CMXenoRavager
+    role: RMCXenoBehemoth
     actionIds:
     - ActionXenoRest
     - ActionXenoRegurgitate
