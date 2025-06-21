@@ -1,13 +1,6 @@
-using Content.Shared._RMC14.Xenonids;
-using Content.Shared._RMC14.Xenonids.Egg;
 using Content.Shared.Actions;
-using Content.Shared.Mind;
-using Content.Shared.Mobs.Components;
-using Content.Shared.Mobs.Systems;
-using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Popups;
 using Robust.Shared.Network;
-using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 
 namespace Content.Shared._RMC14.Ghost;
@@ -25,6 +18,12 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
         SubscribeLocalEvent<RMCGhostRoleCandidateChoiceXenoComponent, ComponentStartup>(OnXenoVotePickerBegin);
 
         SubscribeLocalEvent<GhostRoleCandidateComponent, RMCGhostRoleOptInActionEvent>(OnOptIn);
+
+        Subs.BuiEvents<RMCGhostRoleCandidatePickerComponent>(RMCPickedGhostUI.Key, subs =>
+        {
+            subs.Event<RMCPickedGhostBuiMsg>(OnPickedForGhostRole);
+        });
+
     }
 
     protected virtual void OnXenoVotePickerBegin(Entity<RMCGhostRoleCandidateChoiceXenoComponent> ent, ref ComponentStartup args)
@@ -111,10 +110,4 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
             _actions.RemoveAction(user, actionId);
         }
     }
-}
-
-[Serializable, NetSerializable]
-public sealed class RMCVoteWindowBuiMsg(NetEntity selection) : BoundUserInterfaceMessage
-{
-    public readonly NetEntity Selection = selection;
 }

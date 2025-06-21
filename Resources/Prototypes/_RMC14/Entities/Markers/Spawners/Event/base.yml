@@ -12,6 +12,11 @@
   - type: RMCGhostRoleCandidatePicker
   - type: GhostRoleMobSpawner
     availibleTakeovers: 0
+  - type: UserInterface
+    interfaces:
+      enum.RMCPickedGhostUI.Key:
+        type: RMCPickedGhostUI
+        range: -1
 
 - type: entity
   parent: RMCRaffleEventSpawner
@@ -23,6 +28,7 @@
   - type: RMCGhostRoleCandidatePicker
     optInAction: ActionOptInBehemoth
     candidatePopup: rmc-ghost-picker-popup-behemoth
+    candidateChosenText: rmc-ghost-picker-chosen-behemoth
   - type: GhostRoleMobSpawner
     prototype: RMCXenoBehemoth
   - type: GhostRole

@@ -4,15 +4,18 @@
   name: cm-job-name-xeno-behemoth
   playTimeTracker: RMCXenoBehemoth
   requirements:
+  - !type:RoleTimeRequirement
+    role: CMXenoQueen
+    time: 10800 # 3 hours
   - !type:TotalJobsTimeRequirement
     group: CMJobsXeno
-    time: 36000 # 10 hours
+    time: 54000 # 15 hours
   - !type:TotalJobsTimeRequirement
     group: CMJobsXenoDrones
-    time: 18000 # 5 hours
+    time: 28800 # 5 hours
   - !type:TotalJobsTimeRequirement
     group: CMJobsXenoTierThree
-    time: 10800 # 3 hours
+    time: 21600 # 6 hours
   requireAdminNotify: true
 
 - type: playTimeTracker

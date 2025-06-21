@@ -48,8 +48,8 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      800: Critical
-      900: Dead
+      2000: Critical
+      2100: Dead
   - type: Xeno
     role: RMCXenoBehemoth
     actionIds:
@@ -57,9 +57,8 @@
     - ActionXenoRegurgitate
     - ActionXenoWatch
     - ActionXenoTailStab
-    - ActionXenoEmpower
     - ActionXenoFortifySteelcrest
-    - ActionXenoFling
+#   - Reflect Move
     - ActionXenoTailSweep
     - ActionXenoToggleCharging
     - ActionXenoDevolve
@@ -70,7 +69,7 @@
   - type: XenoPlasma
     plasma: 500
     maxPlasma: 500
-    plasmaRegenOnWeeds: 2
+    plasmaRegenOnWeeds: 4
   - type: CMArmor
     xenoArmor: 50
     explosionArmor: 100
@@ -86,10 +85,8 @@
       groups:
         Brute: 54
   - type: Tackle
-    max: 5
-    chance: 0.35
-    stunMin: 4
-    stunMax: 5
+    min: 6
+    max: 10
   - type: Fixtures
     fixtures:
       fix1:
@@ -138,9 +135,6 @@
     name: cm-job-name-xeno-ravager
   - type: XenoHidden
     selfEffect: CMEffectSelfStomp
-  - type: XenoEmpower
-    MaxTargets: 10
-    SuperThreshold: 11
   - type: XenoFortify
     changeExplosionWeakness: false
     canMoveFortified: true
