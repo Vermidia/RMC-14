@@ -18,11 +18,12 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
         SubscribeLocalEvent<RMCGhostRoleCandidateChoiceXenoComponent, ComponentStartup>(OnXenoVotePickerBegin);
 
         SubscribeLocalEvent<GhostRoleCandidateComponent, RMCGhostRoleOptInActionEvent>(OnOptIn);
-
+        /*
         Subs.BuiEvents<RMCGhostRoleCandidatePickerComponent>(RMCPickedGhostUI.Key, subs =>
         {
             subs.Event<RMCPickedGhostBuiMsg>(OnPickedForGhostRole);
         });
+        */
 
     }
 
