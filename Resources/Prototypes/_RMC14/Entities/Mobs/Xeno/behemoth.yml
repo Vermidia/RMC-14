@@ -14,7 +14,7 @@
 #    guides:
 #    - RMCGuideRoleRavager
 #  - type: GhostRole TODO role
-#    name: cm-job-name-xeno-behemoth
+#    name: rmc-job-name-xeno-behemoth
   - type: Sprite
     sprite: _RMC14/Mobs/Xenonids/Ravager/ravager.rsi
     scale: 1.5, 1.5
@@ -132,7 +132,7 @@
       sprite: _RMC14/Interface/map_blips.rsi
       state: ravager
   - type: FixedIdentity
-    name: cm-job-name-xeno-ravager
+    name: rmc-job-name-xeno-behemoth
   - type: XenoHidden
     selfEffect: CMEffectSelfStomp
   - type: XenoFortify

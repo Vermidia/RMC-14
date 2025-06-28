@@ -14,6 +14,7 @@ public sealed partial class RMCPickedGhostWindow : DefaultWindow
     [Dependency] private readonly IGameTiming _timing = default!;
     public RMCPickedGhostWindow()
     {
+        IoCManager.InjectDependencies(this);
         RobustXamlLoader.Load(this);
     }
 
@@ -24,10 +25,12 @@ public sealed partial class RMCPickedGhostWindow : DefaultWindow
 
     protected override void FrameUpdate(FrameEventArgs args)
     {
+        base.FrameUpdate(args);
+
         if (_candidate == null || _candidate.AutoDenyAt == null)
             return;
 
-        var curTime = _timing.RealTime;
+        var curTime = _timing.CurTime;
         var timeLeft = _candidate.AutoDenyAt.Value - curTime;
         if (timeLeft < TimeSpan.Zero)
             timeLeft = TimeSpan.Zero;

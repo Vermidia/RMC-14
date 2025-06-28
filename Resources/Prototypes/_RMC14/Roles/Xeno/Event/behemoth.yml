@@ -1,8 +1,8 @@
 ﻿- type: job
   parent: CMJobXenoBase
   id: RMCXenoBehemoth
-  name: cm-job-name-xeno-behemoth
-  playTimeTracker: RMCXenoBehemoth
+  name: rmc-job-name-xeno-behemoth
+  playTimeTracker: RMCJobXenoBehemoth
   requirements:
   - !type:RoleTimeRequirement
     role: CMXenoQueen
@@ -19,5 +19,5 @@
   requireAdminNotify: true
 
 - type: playTimeTracker
-  id: RMCXenoBehemoth
+  id: RMCJobXenoBehemoth
   isXeno: true

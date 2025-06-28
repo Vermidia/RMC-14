@@ -1,6 +1,7 @@
 using Content.Shared.Actions;
 using Content.Shared.Popups;
 using Robust.Shared.Network;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Shared._RMC14.Ghost;
@@ -12,18 +13,18 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
         SubscribeLocalEvent<RMCGhostRoleCandidateChoiceXenoComponent, ComponentStartup>(OnXenoVotePickerBegin);
 
         SubscribeLocalEvent<GhostRoleCandidateComponent, RMCGhostRoleOptInActionEvent>(OnOptIn);
-        /*
+
         Subs.BuiEvents<RMCGhostRoleCandidatePickerComponent>(RMCPickedGhostUI.Key, subs =>
         {
-            subs.Event<RMCPickedGhostBuiMsg>(OnPickedForGhostRole);
+            subs.Event<RMCPickedGhostBuiMsg>(OnGhostRoleChoice);
         });
-        */
 
     }
 
@@ -54,7 +55,7 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
             _popup.PopupEntity(Loc.GetString(ent.Comp.CandidatePopup), mob, mob, PopupType.Medium);
         }
 
-        ent.Comp.EndSelectionAt = _timing.CurTime + ent.Comp.EndSelectionAt;
+        ent.Comp.EndSelectionAt = _timing.CurTime + ent.Comp.OptInTime;
         ent.Comp.Candidates.Clear();
         Dirty(ent);
     }
@@ -82,6 +83,15 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
 
         while (query.MoveNext(out var uid, out var picker))
         {
+            if (picker.AutoDenyAt != null)
+            {
+                if (time < picker.AutoDenyAt)
+                    continue;
+
+                CandidateMadeChoice((uid, picker), null);
+                continue;
+            }
+
             if (picker.PickingDone || picker.EndSelectionAt == null || time < picker.EndSelectionAt)
                 continue;
 
@@ -94,8 +104,30 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
 
             picker.PickingDone = true;
             //Go through the canidiates
+            PromptCandidate((uid, picker));
         }
 
+    }
+
+    private void PromptCandidate(Entity<RMCGhostRoleCandidatePickerComponent> picker)
+    {
+        if (picker.Comp.Candidates.Count <= 0)
+        {
+            //TODO Backup picking
+            picker.Comp.AutoDenyAt = null;
+            return;
+        }
+
+        var candidate = GetEntity(_random.PickAndTake(picker.Comp.Candidates));
+
+        if (!_ui.TryOpenUi(picker.Owner, RMCPickedGhostUI.Key, candidate))
+        {
+            PromptCandidate(picker);
+            return;
+        }
+
+        picker.Comp.AutoDenyAt = _timing.CurTime + picker.Comp.AcceptTime;
+        Dirty(picker);
     }
 
     private void RemoveOptInAction(EntityUid user, Entity<RMCGhostRoleCandidatePickerComponent> source)
@@ -110,5 +142,26 @@ public abstract class SharedRMCGhostRoleCandidateSystem : EntitySystem
 
             _actions.RemoveAction(user, actionId);
         }
+    }
+
+    private void OnGhostRoleChoice(Entity<RMCGhostRoleCandidatePickerComponent> ent, ref RMCPickedGhostBuiMsg args)
+    {
+        CandidateMadeChoice(ent, args.Actor, args.Confirmed);
+    }
+
+    private void CandidateMadeChoice(Entity<RMCGhostRoleCandidatePickerComponent> picker, EntityUid? candidate, bool accepted = false)
+    {
+        _ui.CloseUi(picker.Owner, RMCPickedGhostUI.Key);
+
+        if (!accepted || candidate == null)
+            PromptCandidate(picker);
+        else
+            MoveCandidate(picker, candidate.Value);
+
+    }
+
+    protected virtual void MoveCandidate(Entity<RMCGhostRoleCandidatePickerComponent> picker, EntityUid chosen)
+    {
+
     }
 }

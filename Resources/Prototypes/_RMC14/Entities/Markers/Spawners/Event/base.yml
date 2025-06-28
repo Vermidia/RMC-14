@@ -15,8 +15,9 @@
   - type: UserInterface
     interfaces:
       enum.RMCPickedGhostUI.Key:
-        type: RMCPickedGhostUI
-        range: -1
+        type: RMCPickedGhostBui
+        requireInputValidation: false
+        interactionRange: -1
 
 - type: entity
   parent: RMCRaffleEventSpawner
@@ -24,7 +25,7 @@
   name: Behemoth Event Spawner
   components:
   - type: RMCGhostRoleCandidateChoiceXeno
-    jobRequirement: RMCXenoBehemoth
+#    jobRequirement: RMCXenoBehemoth
   - type: RMCGhostRoleCandidatePicker
     optInAction: ActionOptInBehemoth
     candidatePopup: rmc-ghost-picker-popup-behemoth

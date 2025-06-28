@@ -64,3 +64,8 @@ cm-job-supervisors-queen = the Queen
 role-timer-xeno-roles = Xenonid
 role-timer-xeno-drones = drone and drone evolutions
 role-timer-xeno-tier-three = tier three castes
+
+#Event
+
+rmc-job-name-behemoth = Behemoth
+RMCJobXenoBehemoth = Behemoth

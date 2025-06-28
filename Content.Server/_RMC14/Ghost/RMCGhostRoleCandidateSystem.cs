@@ -7,6 +7,9 @@ using Content.Shared.Mobs.Systems;
 using Robust.Shared.Network;
 using Content.Server.Players.PlayTimeTracking;
 using Robust.Server.Player;
+using Content.Server.Ghost.Roles;
+using Content.Shared.Ghost.Roles.Components;
+using Content.Server.Ghost.Roles.Components;
 
 namespace Content.Server._RMC14.Ghost;
 
@@ -16,6 +19,7 @@ public sealed class RMCGhostRoleCandidateSystem : SharedRMCGhostRoleCandidateSys
     [Dependency] private readonly SharedMindSystem _mind = default!;
     [Dependency] private readonly PlayTimeTrackingSystem _tracking = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly GhostRoleSystem _ghost = default!;
 
     protected override void OnXenoVotePickerBegin(Entity<RMCGhostRoleCandidateChoiceXenoComponent> ent, ref ComponentStartup args)
     {
@@ -46,6 +50,19 @@ public sealed class RMCGhostRoleCandidateSystem : SharedRMCGhostRoleCandidateSys
             candidates.Add(uid);
         }
 
+        //TODO RMC14 ghosts
+
         StartChoice((ent, picker), candidates);
+    }
+
+    protected override void MoveCandidate(Entity<RMCGhostRoleCandidatePickerComponent> picker, EntityUid chosen)
+    {
+        if (!_player.TryGetSessionByEntity(chosen, out var session))
+            return;
+
+        if (!TryComp<GhostRoleComponent>(picker, out var role) || !TryComp<GhostRoleMobSpawnerComponent>(picker, out var spawner))
+            return;
+
+        _ghost.Takeover(session, role.Identifier);
     }
 }
