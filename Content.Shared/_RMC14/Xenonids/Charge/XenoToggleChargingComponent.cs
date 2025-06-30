@@ -1,4 +1,4 @@
-﻿using Content.Shared.Chat.Prototypes;
+using Content.Shared.Chat.Prototypes;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
@@ -42,4 +42,7 @@ public sealed partial class XenoToggleChargingComponent : Component
 
     [DataField, AutoNetworkedField]
     public TimeSpan LastMovedGrace = TimeSpan.FromSeconds(0.5);
+
+    [DataField, AutoNetworkedField]
+    public int StageIncreasePerStep = 1;
 }

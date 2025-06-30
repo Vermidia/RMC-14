@@ -33,7 +33,7 @@ public sealed partial class XenoReflectSystem : EntitySystem
         var reflect = EnsureComp<ReflectComponent>(ent);
         reflect.ReflectProb = ent.Comp.ReflectProbOn;
 
-        _aura.GiveAura(ent, ent.Comp.AuraColor, ent.Comp.ReflectTime, 4);
+        _aura.GiveAura(ent, ent.Comp.AuraColor, ent.Comp.ReflectTime, 2);
         ent.Comp.ReflectEndAt = _timing.CurTime + ent.Comp.ReflectTime; ;
 
         if (_net.IsServer)

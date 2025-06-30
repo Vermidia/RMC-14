@@ -703,7 +703,6 @@
   id: ActionXenoToggleChargingBehemoth
   components:
   - type: ActionIfFortified
-    popup: rmc-xeno-fortify-require
 
 - type: entity
   parent: ActionXenoFling

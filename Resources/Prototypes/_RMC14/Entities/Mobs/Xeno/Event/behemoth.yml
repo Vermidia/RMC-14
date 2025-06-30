@@ -73,12 +73,16 @@
     plasmaRegenOnWeeds: 4
   - type: CMArmor
     xenoArmor: 50
+    frontalArmor: 30
+    sideArmor: 15
     explosionArmor: 100
   - type: XenoClaws
     clawType: VerySharp
   - type: MeleeWeapon
     attackRate: 1
     damage:
+      types:
+        Structural: 30
       groups:
         Brute: 45
   - type: XenoTailStab
@@ -108,19 +112,19 @@
         layer:
         - BulletImpassable
   - type: MovementSpeedModifier
-    baseWalkSpeed: 2
-    baseSprintSpeed: 3.5
+    baseWalkSpeed: 1.66
+    baseSprintSpeed: 3
   - type: SlowOnPull
     slowdowns:
-    - multiplier: 0.6125
+    - multiplier: 0.68
       whitelist:
         components:
         - Marine
-    - multiplier: 0.6675
+    - multiplier: 0.755
       whitelist:
         components:
         - XenoLight
-    - multiplier: 0.445
+    - multiplier: 0.5275
       whitelist:
         components:
         - XenoHeavy
@@ -148,7 +152,8 @@
   - type: XenoToggleCharging
     maxStage: 32
     speedPerStage: 0.05
-    plasmaPerStep: 1
+    plasmaPerStep: 3
+    stageIncreasePerStep: 4
   - type: XenoReflect
   - type: Reflect
     reflectProb: 0

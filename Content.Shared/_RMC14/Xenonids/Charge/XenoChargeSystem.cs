@@ -623,7 +623,7 @@ _thrownItemQuery.TryGetComponent(xeno, out var thrown))
             _rmcEmote.TryEmoteWithChat(ent, emote, cooldown: charging.EmoteCooldown);
         }
 
-        ent.Comp.Stage = Math.Min(charging.MaxStage, ent.Comp.Stage + 1);
+        ent.Comp.Stage = Math.Min(charging.MaxStage, ent.Comp.Stage + charging.StageIncreasePerStep);
         ent.Comp.SoundSteps += charging.StepIncrement;
 
         if (ent.Comp.Stage == 1 || ent.Comp.SoundSteps >= charging.SoundEvery)

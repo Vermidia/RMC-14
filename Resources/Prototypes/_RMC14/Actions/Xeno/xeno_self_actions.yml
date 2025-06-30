@@ -473,3 +473,4 @@
     useDelay: 20
   - type: ActionIfFortified
     block: false
+    popup: rmc-xeno-fortify-require

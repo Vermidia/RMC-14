@@ -18,5 +18,5 @@ public sealed partial class XenoReflectComponent : Component
     public float ReflectProbOff = 0;
 
     [DataField, AutoNetworkedField]
-    public Color AuraColor = Color.FromHex("#0000FF");
+    public Color AuraColor = Color.FromHex("#0000FF55");
 }
