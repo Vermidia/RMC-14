@@ -57,10 +57,11 @@
     - ActionXenoRegurgitate
     - ActionXenoWatch
     - ActionXenoTailStab
-    - ActionXenoFortifySteelcrest
-#   - Reflect Move
+    - ActionXenoFortifyBehemoth
+    - ActionXenoReflect
+#   - Breath Move 
     - ActionXenoTailSweep
-    - ActionXenoToggleCharging
+    - ActionXenoToggleChargingBehemoth
     - ActionXenoDevolve
     tier: 0
     hudOffset: 0,0.1
@@ -138,7 +139,7 @@
   - type: XenoFortify
     changeExplosionWeakness: false
     canMoveFortified: true
-  - type: XenoFling
+    canAttackFortified: true
   - type: XenoTailSweep
     range: 3
     damage:
@@ -148,4 +149,7 @@
     maxStage: 32
     speedPerStage: 0.05
     plasmaPerStep: 1
+  - type: XenoReflect
+  - type: Reflect
+    reflectProb: 0
     

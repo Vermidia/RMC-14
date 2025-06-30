@@ -155,6 +155,7 @@
     thresholds:
     - range: 7
       falloff: 10
+  - type: Reflective
 
 # 84mm AP
 

@@ -1,3 +1,4 @@
+using Content.Shared._RMC14.Actions;
 using Content.Shared._RMC14.Damage;
 using Content.Shared._RMC14.Damage.ObstacleSlamming;
 using Content.Shared._RMC14.Emote;
@@ -115,7 +116,23 @@ public sealed class XenoChargeSystem : EntitySystem
 
         SubscribeLocalEvent<HiveLeaderComponent, XenoToggleChargingCollideEvent>(OnLeaderCollide);
 
+        SubscribeLocalEvent<ActionIfChargingComponent, RMCActionUseAttemptEvent>(OnXenoToggleChargeActionUseAttempt);
+
         Subs.CVar(_config, CCVars.RelativeMovement, v => _relativeMovement = v, true);
+    }
+
+    private void OnXenoToggleChargeActionUseAttempt(Entity<ActionIfChargingComponent> ent, ref RMCActionUseAttemptEvent args)
+    {
+        if (args.Cancelled)
+            return;
+
+        var charging = HasComp<ActiveXenoToggleChargingComponent>(args.User);
+
+        if ((charging && ent.Comp.Block) || (!charging && !ent.Comp.Block))
+        {
+            args.Cancelled = true;
+            _popup.PopupClient(Loc.GetString(ent.Comp.Popup), args.User, args.User, PopupType.SmallCaution);
+        }
     }
 
     private void OnChargingDamageCollide(Entity<XenoToggleChargingDamageComponent> damage, ref XenoToggleChargingCollideEvent args)
@@ -459,6 +476,9 @@ _thrownItemQuery.TryGetComponent(xeno, out var thrown))
 
     private void OnXenoToggleChargingAction(Entity<XenoToggleChargingComponent> ent, ref XenoToggleChargingActionEvent args)
     {
+        if (args.Handled)
+            return;
+
         if (_timing.ApplyingState)
             return;
 

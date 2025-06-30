@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._RMC14.Actions;
 using Content.Shared._RMC14.Armor;
 using Content.Shared._RMC14.Explosion;
 using Content.Shared._RMC14.Stun;
@@ -57,8 +58,23 @@ public sealed class XenoFortifySystem : EntitySystem
         SubscribeLocalEvent<XenoFortifyComponent, MobStateChangedEvent>(OnXenoFortifyMobStateChanged);
         SubscribeLocalEvent<XenoFortifyComponent, RefreshMovementSpeedModifiersEvent>(OnXenoFortifyRefreshSpeed);
         SubscribeLocalEvent<XenoFortifyComponent, GetMeleeDamageEvent>(OnXenoFortifyGetMeleeDamage);
+
+        SubscribeLocalEvent<ActionIfFortifiedComponent, RMCActionUseAttemptEvent>(OnXenoFortifiedActionUseAttempt);
     }
 
+    private void OnXenoFortifiedActionUseAttempt(Entity<ActionIfFortifiedComponent> ent, ref RMCActionUseAttemptEvent args)
+    {
+        if (args.Cancelled)
+            return;
+
+        var fortified = TryComp<XenoFortifyComponent>(args.User, out var fort) && fort.Fortified;
+
+        if ((fortified && ent.Comp.Block) || (!fortified && !ent.Comp.Block))
+        {
+            args.Cancelled = true;
+            _popup.PopupClient(Loc.GetString(ent.Comp.Popup), args.User, args.User, PopupType.SmallCaution);
+        }
+    }
     private void OnXenoFortifyAction(Entity<XenoFortifyComponent> xeno, ref XenoFortifyActionEvent args)
     {
         if (args.Handled)
@@ -115,7 +131,7 @@ public sealed class XenoFortifySystem : EntitySystem
 
     private void OnXenoFortifyAttack(Entity<XenoFortifyComponent> xeno, ref AttackAttemptEvent args)
     {
-        if (xeno.Comp.Fortified)
+        if (!xeno.Comp.CanAttackFortified && xeno.Comp.Fortified)
         {
             if (args.Target is not { } target)
                 return;

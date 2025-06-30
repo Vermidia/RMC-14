@@ -1,4 +1,4 @@
-﻿using Content.Shared._RMC14.Stun;
+using Content.Shared._RMC14.Stun;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
 using Robust.Shared.GameStates;
@@ -53,4 +53,7 @@ public sealed partial class XenoFortifyComponent : Component
 
     [DataField, AutoNetworkedField]
     public DamageSpecifier DamageAddedFortified = new();
+
+    [DataField, AutoNetworkedField]
+    public bool CanAttackFortified = false;
 }

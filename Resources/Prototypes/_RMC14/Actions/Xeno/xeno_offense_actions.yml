@@ -699,6 +699,13 @@
     useDelay: 0.25
 
 - type: entity
+  parent: ActionXenoToggleCharging
+  id: ActionXenoToggleChargingBehemoth
+  components:
+  - type: ActionIfFortified
+    popup: rmc-xeno-fortify-require
+
+- type: entity
   parent: ActionXenoFling
   id: ActionXenoRam
   name: Ram (10)

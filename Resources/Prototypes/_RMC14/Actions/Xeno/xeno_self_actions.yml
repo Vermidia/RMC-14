@@ -140,6 +140,14 @@
   description: Become much slower, increasing your resistance to direct damage and explosions. Damage is greatly reduced from the direction you are facing. You count as two sizes bigger while fortified and still can attack structures or use tail slam, but your slashes do less damage.
 
 - type: entity
+  id: ActionXenoFortifyBehemoth
+  parent: ActionXenoFortify
+  name: Fortify
+  description: Become much slower, increasing your resistance to direct damage and explosions. Damage is reduced from the direction you are facing. You can still attack while fortified.
+  components:
+  - type: ActionIfCharging
+
+- type: entity
   id: ActionXenoResinWalker
   parent: ActionXenoBase
   name: Resin Walker (50) # TODO RMC14 proper plasma costs
@@ -449,3 +457,19 @@
   components:
     - type: Sprite
       state: lay_egg
+
+- type: entity
+  parent: ActionXenoBase
+  id: ActionXenoReflect
+  name: Reflective Shell
+  description: While fortified, reflect projectiles for 4 seconds.
+  components:
+  - type: InstantAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: _RMC14/Actions/xeno_actions.rsi
+      state: reflective_resin_wall_(old)
+    event: !type:XenoReflectActionEvent
+    useDelay: 20
+  - type: ActionIfFortified
+    block: false

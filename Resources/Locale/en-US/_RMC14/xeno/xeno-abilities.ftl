@@ -59,6 +59,8 @@ cm-xeno-fortify-cant-headbutt = We can't headbutt while fortifying!
 cm-xeno-fortify-cant-rest = We can't rest while fortifying!
 cm-xeno-fortify-cant-tail-sweep = We can't tail sweep while fortifying!
 cm-xeno-fortify-cant-toggle-crest = We can't lower our crest while fortifying!
+rmc-xeno-fortify-cant = We can't do that while fortified!
+rmc-xeno-fortify-require = We need to be fortified to do this!
 
 # Headbutt
 rmc-xeno-headbutt-too-far = We can't headbutt from this distance with our crest lowered!
@@ -104,20 +106,20 @@ cm-xeno-pheromones-stop = You stop emitting pheromones
 cm-xeno-none-devoured = You haven't devoured anyone!
 
 # Rest
-rmc-xeno-rest-cant-headbutt = You can't headbutt while resting!
-rmc-xeno-rest-cant-fortify = You can't fortify while resting!
-rmc-xeno-rest-cant-tail-sweep = You can't tail sweep while resting!
-rmc-xeno-rest-cant-toggle-crest = You can't lower your crest while resting!
-rmc-xeno-rest-cant-leap = You can't leap while resting!
-rmc-xeno-rest-cant-lunge = You can't lunge while resting!
-rmc-xeno-rest-cant-punch = You can't punch while resting!
-rmc-xeno-rest-cant-fling = You can't fling while resting!
-rmc-xeno-rest-cant-charge = You can't charge while resting!
-rmc-xeno-rest-cant-stomp = You can't stomp while resting!
-rmc-xeno-rest-cant-gut = You can't gut while resting!
-rmc-xeno-rest-cant-screech = You can't screech while resting!
-rmc-xeno-rest-cant-secrete = You can't secrete while resting!
-rmc-xeno-rest-cant = You can't do that while resting!
+rmc-xeno-rest-cant-headbutt = We can't headbutt while resting!
+rmc-xeno-rest-cant-fortify = We can't fortify while resting!
+rmc-xeno-rest-cant-tail-sweep = We can't tail sweep while resting!
+rmc-xeno-rest-cant-toggle-crest = We can't lower your crest while resting!
+rmc-xeno-rest-cant-leap = We can't leap while resting!
+rmc-xeno-rest-cant-lunge = We can't lunge while resting!
+rmc-xeno-rest-cant-punch = We can't punch while resting!
+rmc-xeno-rest-cant-fling = We can't fling while resting!
+rmc-xeno-rest-cant-charge = We can't charge while resting!
+rmc-xeno-rest-cant-stomp = We can't stomp while resting!
+rmc-xeno-rest-cant-gut = We can't gut while resting!
+rmc-xeno-rest-cant-screech = We can't screech while resting!
+rmc-xeno-rest-cant-secrete = We can't secrete while resting!
+rmc-xeno-rest-cant = We can't do that while resting!
 
 # Toggle Crest Defense
 cm-xeno-toggle-crest-cant-fortify = You can't fortify while your crest is lowered!
@@ -373,3 +375,9 @@ rmc-xeno-eviscerate-windup-small = {$xeno} begins digging in for a strike!
 
 # Fling
 rmc-xeno-fling-too-big = {CAPITALIZE(THE($target))} is too big for us to fling!
+
+# Toggle Charge
+rmc-xeno-toggle-charge-cant = We can't do that while charging!
+
+# Reflect
+rmc-xeno-reflect-on = {CAPITALIZE(THE($xeno))} carapace becomes reflective!
