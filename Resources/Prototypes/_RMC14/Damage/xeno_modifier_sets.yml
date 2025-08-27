@@ -12,3 +12,11 @@
     Heat: 0.333
     Shock: 0.333
     Structural: 0.333
+
+- type: damageModifierSet
+  id: Reflective
+  coefficients:
+    Heat: 1.5
+    Blunt: 0.5
+    Slash: 0.5
+    Piercing: 0.5

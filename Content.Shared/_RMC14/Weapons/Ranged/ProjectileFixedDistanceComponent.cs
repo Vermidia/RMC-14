@@ -1,10 +1,11 @@
-﻿using Content.Shared._RMC14.Xenonids.Projectile;
+using Content.Shared._RMC14.Projectiles.Reflect;
+using Content.Shared._RMC14.Xenonids.Projectile;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared._RMC14.Weapons.Ranged;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-[Access(typeof(CMGunSystem), typeof(XenoProjectileSystem))]
+[Access(typeof(CMGunSystem), typeof(XenoProjectileSystem), typeof(RMCReflectSystem))]
 public sealed partial class ProjectileFixedDistanceComponent : Component
 {
     /// <summary>

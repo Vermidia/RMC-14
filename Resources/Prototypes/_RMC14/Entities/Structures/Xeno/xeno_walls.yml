@@ -172,3 +172,50 @@
     lifetime: 5.0
   - type: XenoStructureUpgradeable
     to: null
+
+- type: entity
+  parent: BaseMembraneXeno
+  id: WallXenoReflective
+  name: resin reflective wall
+  description: Weird hardened slime solidified into a fine, smooth wall.
+  components:
+  - type: Sprite
+    sprite: _RMC14/Structures/Walls/bone_resin.rsi
+    state: bone_resin
+  - type: Icon
+    sprite: _RMC14/Structures/Walls/bone_resin.rsi
+    state: bone_resin
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 300
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: IconSmooth
+    key: walls
+    base: bone_resin
+  - type: Damageable
+    damageContainer: StructuralXeno
+    damageModifierSet: Reflective
+  - type: RMCReflective
+  - type: ExplosionResistance
+    damageCoefficient: 0.3
+
+- type: entity
+  parent: WallXenoReflective
+  id: WallXenoReflectiveWeak
+  name: weakened reflective wall
+  description: Weird slime with strange hardened fragments solidified into a wall. It looks like it last for moment before it will collapse.
+  components:
+  - type: Destructible
+    thresholds: 
+    - trigger:
+        !type:DamageTrigger
+        damage: 80
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: TimedDespawn
+    lifetime: 13

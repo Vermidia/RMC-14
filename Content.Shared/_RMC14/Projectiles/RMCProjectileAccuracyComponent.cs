@@ -1,3 +1,4 @@
+using Content.Shared._RMC14.Projectiles.Reflect;
 using Content.Shared._RMC14.Random;
 using Content.Shared._RMC14.Weapons.Ranged;
 using Content.Shared.FixedPoint;
@@ -8,7 +9,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._RMC14.Projectiles;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-[Access(typeof(RMCProjectileSystem), typeof(CMGunSystem))]
+[Access(typeof(RMCProjectileSystem), typeof(CMGunSystem), typeof(RMCReflectSystem))]
 public sealed partial class RMCProjectileAccuracyComponent : Component
 {
     /// <summary>
