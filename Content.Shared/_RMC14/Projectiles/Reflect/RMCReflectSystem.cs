@@ -69,7 +69,7 @@ public sealed partial class RMCReflectSystem : EntitySystem
             {
                 fixedDist.FlyEndTime = _timing.CurTime + TimeSpan.FromSeconds(distance / gun.ProjectileSpeedModified);
                 Dirty(projectile, fixedDist);
-        }
+            }
         }
         else
         {
