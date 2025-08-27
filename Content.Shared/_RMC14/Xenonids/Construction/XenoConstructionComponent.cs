@@ -53,4 +53,10 @@ public sealed partial class XenoConstructionComponent : Component
 
     [DataField, AutoNetworkedField]
     public bool CanUpgrade;
+
+    [DataField, AutoNetworkedField]
+    public TimeSpan UpgradeDelay = TimeSpan.Zero;
+
+    [DataField, AutoNetworkedField]
+    public FixedPoint2? FixedUpgradeCost = null;
 }

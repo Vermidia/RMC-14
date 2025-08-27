@@ -8,6 +8,7 @@ using Content.Shared._RMC14.Sentry;
 using Content.Shared._RMC14.Xenonids.Announce;
 using Content.Shared._RMC14.Xenonids.Construction.Events;
 using Content.Shared._RMC14.Xenonids.Construction.Nest;
+using Content.Shared._RMC14.Xenonids.Construction.ResinWhisper;
 using Content.Shared._RMC14.Xenonids.Construction.Tunnel;
 using Content.Shared._RMC14.Xenonids.Egg;
 using Content.Shared._RMC14.Xenonids.Eye;
@@ -120,6 +121,7 @@ public sealed class SharedXenoConstructionSystem : EntitySystem
 
         SubscribeLocalEvent<XenoConstructionComponent, XenoSecreteStructureActionEvent>(OnXenoSecreteStructureAction);
         SubscribeLocalEvent<XenoConstructionComponent, XenoSecreteStructureDoAfterEvent>(OnXenoSecreteStructureDoAfter);
+        SubscribeLocalEvent<XenoConstructionComponent, XenoUpgradeResinDoafterEvent>(OnXenoUpgradeResinDoAfter);
 
         SubscribeLocalEvent<XenoConstructionComponent, XenoOrderConstructionActionEvent>(OnXenoOrderConstructionAction);
         SubscribeLocalEvent<XenoConstructionComponent, XenoOrderConstructionDoAfterEvent>(OnXenoOrderConstructionDoAfter);
@@ -392,6 +394,34 @@ public sealed class SharedXenoConstructionSystem : EntitySystem
         };
     }
 
+    private void OnXenoUpgradeResinDoAfter(Entity<XenoConstructionComponent> xeno, ref XenoUpgradeResinDoafterEvent args)
+    {
+        if (_net.IsServer && args.Effect != null)
+            QueueDel(EntityManager.GetEntity(args.Effect));
+
+        if (args.Cancelled || args.Handled || args.Target == null)
+            return;
+
+        args.Handled = true;
+
+        if (!_xenoPlasma.TryRemovePlasmaPopup(xeno.Owner, args.PlasmaCost))
+            return;
+
+        var msg = args.PlasmaCost == 0
+    ? "We regurgitate some resin and thicken the " + Name(args.Target.Value) + " effortlessly."
+    : $"We regurgitate some resin and thicken the {Name(args.Target.Value)}, using {args.PlasmaCost} plasma.";
+        _popup.PopupClient(msg, args.Target.Value, xeno);
+
+        if (_net.IsClient)
+            return;
+
+        var coordinates = GetCoordinates(args.Coordinates);
+
+        QueueDel(args.Target);
+        Spawn(args.StructureId, coordinates);
+        args.Handled = true;
+    }
+
     private void HandleSecreteResinPlacement(Entity<XenoConstructionComponent> xeno, ref XenoSecreteStructureActionEvent args)
     {
         var snapped = args.Target.SnapToGrid(EntityManager, _map);
@@ -405,27 +435,43 @@ public sealed class SharedXenoConstructionSystem : EntitySystem
             var inRange = _queenEye.IsInQueenEye(xeno.Owner) ||
                         (hasBoost && _queenBoostQuery.TryComp(xeno.Owner, out var boost)
                             ? _transform.InRange(_transform.GetMoverCoordinates(xeno.Owner), args.Target, boost.RemoteUpgradeRange)
-                            : _interaction.InRangeUnobstructed(xeno.Owner, upgradeable.Owner, popup: true));
+                            : _interaction.InRangeUnobstructed(xeno.Owner, upgradeable.Owner, xeno.Comp.BuildRange.Float(), popup: true));
 
             if (!inRange)
                 return;
 
-            var cost = upgradeable.Comp.Cost;
+            var cost = xeno.Comp.FixedUpgradeCost != null ? xeno.Comp.FixedUpgradeCost.Value : upgradeable.Comp.Cost;
 
-            if (!hasBoost && !_xenoPlasma.TryRemovePlasmaPopup(xeno.Owner, cost))
+            if (!_xenoPlasma.HasPlasmaPopup(xeno.Owner, cost))
                 return;
 
-            var msg = hasBoost
-                ? "We regurgitate some resin and thicken the " + Name(upgradeable) + " effortlessly."
-                : $"We regurgitate some resin and thicken the {Name(upgradeable)}, using {cost} plasma.";
-            _popup.PopupClient(msg, upgradeable, xeno);
+            var upgradeEffectId = XenoStructuresAnimation + upgradeable.Comp.To;
 
-            if (_net.IsClient)
-                return;
+            EntityUid? upgradeEffect = null;
 
-            QueueDel(upgradeable);
-            Spawn(to, snapped);
-            args.Handled = true;
+            var upgradeTime = xeno.Comp.UpgradeDelay;
+
+            if (_net.IsServer && _prototype.HasIndex(upgradeEffectId) && upgradeTime >= TimeSpan.FromSeconds(1)) //Animation would break under a second most of the time
+            {
+                upgradeEffect = Spawn(upgradeEffectId, snapped);
+                RaiseNetworkEvent(new XenoConstructionAnimationStartEvent(GetNetEntity(upgradeEffect.Value), GetNetEntity(xeno), upgradeTime), Filter.PvsExcept(upgradeEffect.Value));
+            }
+
+            var nev = new XenoUpgradeResinDoafterEvent(GetNetCoordinates(snapped), upgradeable.Comp.To.Value, cost, GetNetEntity(upgradeEffect));
+
+            var upgradeDoAfter = new DoAfterArgs(EntityManager, xeno, upgradeTime, nev, xeno, upgradeable)
+            {
+                BreakOnMove = true,
+                DistanceThreshold = xeno.Comp.BuildRange.Float()
+            };
+
+            if (!_doAfter.TryStartDoAfter(upgradeDoAfter))
+            {
+                if (upgradeEffect != null && _net.IsServer)
+                    QueueDel(upgradeEffect);
+            }
+
+
             return;
         }
 
@@ -773,7 +819,8 @@ public sealed class SharedXenoConstructionSystem : EntitySystem
                 if (inRange)
                     return;
             }
-            if (_interaction.InRangeUnobstructed(args.User, upgradeable.Owner, popup: false))
+
+            if (_interaction.InRangeUnobstructed(args.User, upgradeable.Owner, construction.BuildRange.Float(), popup: false))
                 return;
         }
 

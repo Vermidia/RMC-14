@@ -101,6 +101,16 @@
   - type: RMCDazeableAction
 
 - type: entity
+  id: ActionXenoPlaceDesign
+  parent: ActionXenoCoerceResin
+  name: Place Design
+  description: "TODO"
+  components:
+  - type: XenoConstructionAction
+    canUpgrade: true
+  - type: RMCDazeableAction
+
+- type: entity
   id: ActionXenoOrderConstruction
   parent: ActionXenoBase
   name: Order Construction
