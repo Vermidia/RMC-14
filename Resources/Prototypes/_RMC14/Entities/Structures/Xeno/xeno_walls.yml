@@ -196,9 +196,6 @@
   - type: IconSmooth
     key: walls
     base: bone_resin
-  - type: Damageable
-    damageContainer: StructuralXeno
-    damageModifierSet: Reflective
   - type: RMCReflective
   - type: ExplosionResistance
     damageCoefficient: 0.3

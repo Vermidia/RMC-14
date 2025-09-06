@@ -103,8 +103,8 @@
 - type: entity
   id: ActionXenoPlaceDesign
   parent: ActionXenoCoerceResin
-  name: Place Design
-  description: "TODO"
+  name: Influence Resin
+  description: "Builds the chosen node with the 'Change Design' action. You may also build within line of sight if you are on weeds, and can upgrade resin remotely."
   components:
   - type: XenoConstructionAction
     canUpgrade: true

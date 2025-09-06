@@ -31,10 +31,10 @@ public sealed partial class RMCReflectSystem : EntitySystem
 
     private void OnReflectAttempt(Entity<RMCReflectiveComponent> reflector, ref ProjectileReflectAttemptEvent args)
     {
-        if (!_random.Prob(reflector.Comp.ReflectChance.Float()))
+        if ((TryComp<ProjectileIFFComponent>(args.ProjUid, out var iff) && iff.Enabled) || !TryComp<PhysicsComponent>(args.ProjUid, out var physics))
             return;
 
-        if ((TryComp<ProjectileIFFComponent>(args.ProjUid, out var iff) && iff.Enabled) || !TryComp<PhysicsComponent>(args.ProjUid, out var physics))
+        if (!_random.Prob(reflector.Comp.ReflectChance.Float())) //TODO make projectile do less damage after this
             return;
 
         var projectile = args.ProjUid;

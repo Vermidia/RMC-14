@@ -4,7 +4,7 @@ using Robust.Shared.GameStates;
 namespace Content.Shared._RMC14.Projectiles.Reflect;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-public sealed partial class RMCReflectiveComponent : Component
+public sealed partial class RMCReflectiveComponent : Component //TODO RMC14 projectile reflect fail damage modifier
 {
     [DataField, AutoNetworkedField]
     public FixedPoint2 ReflectChance = 0.75;
