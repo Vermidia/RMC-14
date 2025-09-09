@@ -451,10 +451,11 @@ public sealed class SharedXenoConstructionSystem : EntitySystem
                 return;
 
             var cost = upgradeable.Comp.Cost;
-            if (xeno.Comp.FixedUpgradeCost == null && _area.TryGetArea(snapped, out var area, out _))
+            if (xeno.Comp.FixedUpgradeCost != null)
+                cost = xeno.Comp.FixedUpgradeCost.Value;
+            else if (_area.TryGetArea(snapped, out var area, out _))
                 cost = GetDensityCost(area.Value, xeno, cost);
-            else
-                cost = xeno.Comp.FixedUpgradeCost;
+
 
             if (!_xenoPlasma.HasPlasmaPopup(xeno.Owner, cost))
                 return;
