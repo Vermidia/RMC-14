@@ -37,6 +37,7 @@ public sealed class VanguardShieldSystem : EntitySystem
 
         xeno.Comp.LastTimeHit = _timing.CurTime;
     }
+
     private void OnVanguardShieldHit(Entity<VanguardShieldComponent> xeno, ref DamageModifyAfterResistEvent args)
     {
         if (_net.IsServer)
